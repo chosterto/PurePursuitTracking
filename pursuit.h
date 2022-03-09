@@ -24,7 +24,7 @@ public:
 
 private:
     double Curvature(Vec2D P, Vec2D Q, Vec2D R);
-    double FindMaxVelocity(int index, double maxVelo, double k);
+    double FindMaxVelocity(int index, double k);
     void CalculateDistances();
     void CalculateTargetVelocities();
 

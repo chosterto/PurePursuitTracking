@@ -40,20 +40,31 @@ void PurePursuitController::CalculateDistances() {
     path[0].distance = 0;
 }
 
-void PurePursuitController::CalculateTargetVelocities() {
-    
-}
-
-double PurePursuitController::FindMaxVelocity(int index, double maxVelo, double k) {
+double PurePursuitController::FindMaxVelocity(int index, double k) {
     Vec2D point = path[index];
     Vec2D backpoint = path[index - 1];
     Vec2D frontpoint = path[index + 1];
     if (index > 0) {
         double curvature = Curvature(backpoint, point, frontpoint);
-        return std::min(maxVelo, k / curvature);
+        return std::min(l_maxSpeed, k / curvature);
     }
-    return maxVelo;
+    return l_maxSpeed;
 }
+
+void PurePursuitController::CalculateTargetVelocities() {
+    // First calculate the max target velocities for each point
+    for (int i = 1;  i < path.size() - 1; i++)
+        path[i].speed = FindMaxVelocity(i, 1);
+
+    path[path.size() - 1].speed = 0;
+    for (int i = path.size() - 2; i >= 0; i--) {
+        double dist = path[i + 1].distance - path[i].distance;
+        double v_i = path[i + 1].speed;
+        double v_f = sqrt(v_i * v_i + 2 * l_maxAcceleration * dist);
+        path[i].speed = std::min(path[i].speed, v_f);
+    }
+}
+
 
 std::vector<Vec2D> PurePursuitController::GetPath() {
     return path;
@@ -63,7 +74,6 @@ void PurePursuitController::InjectWaypoint(double x, double y) {
     Vec2D p;
     p.x = x;
     p.y = y;
-    p.speed = l_maxSpeed;
     path.push_back(p);
     CalculateDistances();
 }
@@ -72,7 +82,6 @@ void PurePursuitController::SetOrigin(double x, double y) {
     Vec2D origin;
     origin.x = x;
     origin.y = y;
-    origin.speed = l_maxSpeed;
     origin.distance = 0;
     if (path.size() == 0) {
         path.push_back(origin);
@@ -109,6 +118,8 @@ void PurePursuitController::Interpolate(double spacing) {
     path = more_points;
     // Update distances
     CalculateDistances();
+    // Calcaulte speeds
+    CalculateTargetVelocities();
 }
 
 
@@ -131,6 +142,8 @@ void PurePursuitController::SmoothPath(double a, double b, double tolerance) {
     path = new_path;
     // Update distances
     CalculateDistances();
+    // Calculate speeds
+    CalculateTargetVelocities();
 }
 
 
