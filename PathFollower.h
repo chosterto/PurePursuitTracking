@@ -8,14 +8,14 @@ public:
     using PurePursuitController::PurePursuitController;
     
     void GeneratePath(double spacing);
-    double GetLeftWheelSpeed();
-    double GetRightWheelSpeed();
-    void Update(Vec2D robotPos, double robotAngle, double trackWidth);
+    void Update(Vec2D robotPos, double robotAngle, double leftVelocity, double rightVelocity, double trackWidth);
+    bool IsDone();
+    double GetLeftPower();
+    double GetRightPower();
 
 private:
-    double leftSpeed;
-    double rightSpeed;
-
+    double leftPower;
+    double rightPower;
 };
 
 #endif
