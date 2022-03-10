@@ -1,7 +1,15 @@
 #include "pursuit.h"
 #include <iostream>
 
+#define DEG_TO_RAD (M_PI / 180)
+#define RAD_TO_DEG (180 / M_PI)
 #define DISTANCE(x, y) (sqrt((x)*(x) + (y)*(y)))
+
+
+template <typename T> int signum(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 
 PurePursuitController::PurePursuitController(double maxSpeed, double maxAcceleration, double lookAheadDistance): 
 l_maxSpeed(maxSpeed), l_maxAcceleration(maxAcceleration), l_lookAheadDistance(lookAheadDistance) {}
@@ -57,6 +65,7 @@ void PurePursuitController::CalculateTargetVelocities() {
         path[i].speed = FindMaxVelocity(i, 1);
 
     path[path.size() - 1].speed = 0;
+    path[0].speed = l_maxSpeed;
     for (int i = path.size() - 2; i >= 0; i--) {
         double dist = path[i + 1].distance - path[i].distance;
         double v_i = path[i + 1].speed;
@@ -94,7 +103,7 @@ Vec2D PurePursuitController::LookAheadPoint(Vec2D start, Vec2D end, Vec2D pos) {
 
     if (discriminant < 0) {
         // no intersection
-        return Vec2D{10000, 0};
+        return Vec2D{NAN, 0};
     } else {
         discriminant = sqrt(discriminant);
         double t1 = (-b - discriminant) / (2*a);
@@ -111,8 +120,35 @@ Vec2D PurePursuitController::LookAheadPoint(Vec2D start, Vec2D end, Vec2D pos) {
             Vec2D point{start.x + t_f * d.x, start.y + t_f * d.y};
             return point;
         }
-        return Vec2D{10000, 0};
+        return Vec2D{NAN, 0};
     }
+}
+
+
+double PurePursuitController::CurvatureOfArc(Vec2D pos, double heading) {
+    Vec2D lookAheadPoint = lastLookAheadPoint;
+    for (int i = lastClosestPointIdx; i < path.size() - 1; i++) {
+        Vec2D point = LookAheadPoint(path[i], path[i + 1], pos);
+        if (std::isnan(point.x)) {
+            continue;
+        }
+        lookAheadPoint = point;
+        lastLookAheadPoint = point;
+    }
+
+    double a = -tan(heading * DEG_TO_RAD);
+    double b = 1;
+    double c = tan(heading * DEG_TO_RAD) * pos.x - pos.y;
+
+    double x = std::abs(a * lookAheadPoint.x + b * lookAheadPoint.y + c) / DISTANCE(a, b);
+    double L = DISTANCE(lookAheadPoint.x - pos.x, lookAheadPoint.y - pos.y);
+    double curvature = 2 * x / (L*L);
+
+    int side = signum(sin(heading) * (lookAheadPoint.x - pos.x) - cos(heading) * (lookAheadPoint.y - pos.y));
+
+    curvature = side * curvature;
+
+    return curvature;
 }
 
 

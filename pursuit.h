@@ -29,8 +29,10 @@ private:
     void CalculateTargetVelocities();
     Vec2D ClosestPoint(Vec2D pos);
     Vec2D LookAheadPoint(Vec2D start, Vec2D end, Vec2D pos);
+    double CurvatureOfArc(Vec2D pos, double heading);
 
     std::vector<Vec2D> path;
+    Vec2D lastLookAheadPoint;
     int lastClosestPointIdx = 0;
     double l_maxSpeed;
     double l_maxAcceleration;
