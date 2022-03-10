@@ -3,8 +3,8 @@
 
 #define DISTANCE(x, y) (sqrt((x)*(x) + (y)*(y)))
 
-PurePursuitController::PurePursuitController(double maxSpeed, double maxAcceleration): 
-l_maxSpeed(maxSpeed), l_maxAcceleration(maxAcceleration) {}
+PurePursuitController::PurePursuitController(double maxSpeed, double maxAcceleration, double lookAheadDistance): 
+l_maxSpeed(maxSpeed), l_maxAcceleration(maxAcceleration), l_lookAheadDistance(lookAheadDistance) {}
 
 
 double PurePursuitController::Curvature(Vec2D P, Vec2D Q, Vec2D R) {
@@ -62,6 +62,56 @@ void PurePursuitController::CalculateTargetVelocities() {
         double v_i = path[i + 1].speed;
         double v_f = sqrt(v_i * v_i + 2 * l_maxAcceleration * dist);
         path[i].speed = std::min(path[i].speed, v_f);
+    }
+}
+
+
+Vec2D PurePursuitController::ClosestPoint(Vec2D pos) {
+    int last = lastClosestPointIdx;
+    double minDistance = INFINITY;
+    Vec2D closestPoint;
+    for (int i = last; i < path.size() - 1; i++) {
+        Vec2D point = path[i];
+        double dist = DISTANCE(pos.x - point.x, pos.y - point.y);
+        if (dist < minDistance) {
+            lastClosestPointIdx = i;
+            minDistance = dist;
+            closestPoint = point;
+        }
+    }
+    return closestPoint;
+}
+
+
+Vec2D PurePursuitController::LookAheadPoint(Vec2D start, Vec2D end, Vec2D pos) {
+    Vec2D d{end.x - start.x, end.y - start.y};
+    Vec2D f{start.x - pos.x, start.y - pos.y};
+
+    double a = d.x*d.x + d.y*d.y;
+    double b = 2 * (f.x*d.x + f.y*d.y);
+    double c = (f.x*f.x + f.y*f.y) - l_lookAheadDistance*l_lookAheadDistance;
+    double discriminant = b*b - 4*a*c;
+
+    if (discriminant < 0) {
+        // no intersection
+        return Vec2D{10000, 0};
+    } else {
+        discriminant = sqrt(discriminant);
+        double t1 = (-b - discriminant) / (2*a);
+        double t2 = (-b + discriminant) / (2*a);
+        double t_f = 0;
+
+        if (t2 >= 0 && t2 <= 1) {
+            t_f = t2;
+        }
+        if (t1 >= 0 && t1 <= 1) {
+            t_f = t1;
+        }
+        if (t_f != 0) {
+            Vec2D point{start.x + t_f * d.x, start.y + t_f * d.y};
+            return point;
+        }
+        return Vec2D{10000, 0};
     }
 }
 

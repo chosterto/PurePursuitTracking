@@ -14,7 +14,7 @@ struct Vec2D {
 
 class PurePursuitController {
 public:
-    PurePursuitController(double maxSpeed, double maxAcceleration);
+    PurePursuitController(double maxSpeed, double maxAcceleration, double lookAheadDistance);
 
     std::vector<Vec2D> GetPath();
     void InjectWaypoint(double x, double y);
@@ -27,10 +27,14 @@ private:
     double FindMaxVelocity(int index, double k);
     void CalculateDistances();
     void CalculateTargetVelocities();
+    Vec2D ClosestPoint(Vec2D pos);
+    Vec2D LookAheadPoint(Vec2D start, Vec2D end, Vec2D pos);
 
     std::vector<Vec2D> path;
+    int lastClosestPointIdx = 0;
     double l_maxSpeed;
     double l_maxAcceleration;
+    double l_lookAheadDistance;
 };
 
 #endif
