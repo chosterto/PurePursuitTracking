@@ -22,7 +22,7 @@ public:
     void Interpolate(double spacing);
     void SmoothPath(double a, double b, double tolerance);
 
-private:
+protected:
     double Curvature(Vec2D P, Vec2D Q, Vec2D R);
     double FindMaxVelocity(int index, double k);
     void CalculateDistances();
