@@ -99,7 +99,7 @@ Vec2D PurePursuitController::LookAheadPoint(Vec2D start, Vec2D end, Vec2D pos) {
         discriminant = sqrt(discriminant);
         double t1 = (-b - discriminant) / (2*a);
         double t2 = (-b + discriminant) / (2*a);
-        double t_f = 0;
+        double t_f = NAN;
 
         if (t2 >= 0 && t2 <= 1) {
             t_f = t2;
@@ -107,7 +107,7 @@ Vec2D PurePursuitController::LookAheadPoint(Vec2D start, Vec2D end, Vec2D pos) {
         if (t1 >= 0 && t1 <= 1) {
             t_f = t1;
         }
-        if (t_f != 0) {
+        if (!std::isnan(t_f)) {
             Vec2D point{start.x + t_f * d.x, start.y + t_f * d.y};
             return point;
         }
