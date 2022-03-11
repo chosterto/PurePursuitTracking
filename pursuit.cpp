@@ -79,7 +79,7 @@ Vec2D PurePursuitController::ClosestPoint(Vec2D pos) {
     int last = lastClosestPointIdx;
     double minDistance = INFINITY;
     Vec2D closestPoint;
-    for (int i = last; i < path.size() - 1; i++) {
+    for (int i = last; i < path.size(); i++) {
         Vec2D point = path[i];
         double dist = DISTANCE(pos.x - point.x, pos.y - point.y);
         if (dist < minDistance) {
