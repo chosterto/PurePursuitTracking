@@ -12,10 +12,14 @@ public:
     bool IsDone();
     double GetLeftPower();
     double GetRightPower();
+    double GetLeftVelocity();
+    double GetRightVelocity();
 
 private:
     double leftPower;
     double rightPower;
+    double leftTargetVelocity;
+    double rightTargetVelocity;
 };
 
 #endif
