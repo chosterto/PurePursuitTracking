@@ -1,7 +1,7 @@
 #include "PathFollower.h"
 
 #define kP 0.01
-#define kV 0.001
+#define kV 0.1
 
 void PathFollower::GeneratePath(double spacing) {
     Interpolate(spacing);
