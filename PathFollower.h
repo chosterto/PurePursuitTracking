@@ -22,8 +22,8 @@ private:
     double rightPower;
     double leftTargetVelocity;
     double rightTargetVelocity;
-    double kP = 0;
-    double kV = 0;
+    double kP = 1.0;
+    double kV = 1.0;
 };
 
 #endif
