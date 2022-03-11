@@ -144,7 +144,9 @@ double PurePursuitController::CurvatureOfArc(Vec2D pos, double heading) {
     double L = DISTANCE(lookAheadPoint.x - pos.x, lookAheadPoint.y - pos.y);
     double curvature = (2 * x) / (L*L);
 
-    int side = signum(sin(heading) * (lookAheadPoint.x - pos.x) - cos(heading) * (lookAheadPoint.y - pos.y));
+    int side = signum(
+        sin(heading * DEG_TO_RAD) * (lookAheadPoint.x - pos.x) - cos(heading * DEG_TO_RAD) * (lookAheadPoint.y - pos.y)
+        );
 
     curvature = side * curvature;
 
