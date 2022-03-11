@@ -14,12 +14,16 @@ public:
     double GetRightPower();
     double GetLeftVelocity();
     double GetRightVelocity();
+    void SetKP(double value);
+    void SetKV(double value);
 
 private:
     double leftPower;
     double rightPower;
     double leftTargetVelocity;
     double rightTargetVelocity;
+    double kP = 0;
+    double kV = 0;
 };
 
 #endif

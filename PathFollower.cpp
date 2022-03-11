@@ -1,7 +1,5 @@
 #include "PathFollower.h"
 
-#define kP 0.01
-#define kV 0.1
 
 void PathFollower::GeneratePath(double spacing) {
     Interpolate(spacing);
@@ -22,6 +20,14 @@ double PathFollower::GetLeftVelocity() {
 
 double PathFollower::GetRightVelocity() {
     return rightTargetVelocity;
+}
+
+void PathFollower::SetKP(double value) {
+    kP = value;
+}
+
+void PathFollower::SetKV(double value) {
+    kV = value;
 }
 
 
