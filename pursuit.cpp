@@ -158,18 +158,28 @@ std::vector<Vec2D> PurePursuitController::GetPath() {
     return path;
 }
 
+void PurePursuitController::ClearPath() {
+    path.clear();
+    lastClosestPointIdx = 0;
+}
+
+void PurePursuitController::Translate(double x, double y) {
+    offset.x = x;
+    offset.y = y;
+}
+
 void PurePursuitController::InjectWaypoint(double x, double y) {
     Vec2D p;
-    p.x = x;
-    p.y = y;
+    p.x = x + offset.x;
+    p.y = y + offset.y;
     path.push_back(p);
     CalculateDistances();
 }
 
 void PurePursuitController::SetOrigin(double x, double y) {
     Vec2D origin;
-    origin.x = x;
-    origin.y = y;
+    origin.x = x + offset.x;
+    origin.y = y + offset.y;
     origin.distance = 0;
     if (path.size() == 0) {
         path.push_back(origin);

@@ -21,6 +21,8 @@ public:
     void SetOrigin(double x, double y);
     void Interpolate(double spacing);
     void SmoothPath(double a, double b, double tolerance);
+    void Translate(double x, double y);
+    void ClearPath();
 
 protected:
     double Curvature(Vec2D P, Vec2D Q, Vec2D R);
@@ -33,6 +35,7 @@ protected:
 
     std::vector<Vec2D> path;
     Vec2D lastLookAheadPoint;
+    Vec2D offset{0, 0};
     int lastClosestPointIdx = 0;
     double l_maxSpeed;
     double l_maxAcceleration;
