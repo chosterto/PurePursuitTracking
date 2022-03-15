@@ -16,12 +16,51 @@ class PurePursuitController {
 public:
     PurePursuitController(double maxSpeed, double maxAcceleration, double lookAheadDistance);
 
+    /**
+     * @brief Gets all points of the path
+     * 
+     * @return path of the robot
+     */
     std::vector<Vec2D> GetPath();
+    /**
+     * @brief Adds a waypoint to the path
+     * 
+     * @param x x coordinate of point
+     * @param y y coordinate of point
+     */
     void InjectWaypoint(double x, double y);
+    /**
+     * @brief sets the origin point of path
+     * 
+     * @param x x coordinate of point
+     * @param y y coordinate of point
+     */
     void SetOrigin(double x, double y);
+    /**
+     * @brief Calculates points in between a given set of waypoints
+     * 
+     * @param spacing distance between each point
+     */
     void Interpolate(double spacing);
+    /**
+     * @brief Smooths the robot path
+     * 
+     * @param a weight data
+     * @param b weight smooth
+     * @param tolerance tolerance of smoothed path
+     */
     void SmoothPath(double a, double b, double tolerance);
+    /**
+     * @brief translates waypoints by an offset x and y value
+     * 
+     * @param x offset of x
+     * @param y offset of y
+     */
     void Translate(double x, double y);
+    /**
+     * @brief Clears and resets robot path
+     * 
+     */
     void ClearPath();
 
 protected:
