@@ -216,7 +216,7 @@ void PurePursuitController::Interpolate(double spacing) {
     path = more_points;
     // Update distances
     CalculateDistances();
-    // Calcaulte speeds
+    // Calculate speeds
     CalculateTargetVelocities();
 }
 
