@@ -37,7 +37,7 @@ double PurePursuitController::Curvature(Vec2D P, Vec2D Q, Vec2D R) {
 
 void PurePursuitController::CalculateDistances() {
     double distance = 0;
-    Vec2D previous;
+    Vec2D previous = path[0];
     for (unsigned int i = 0; i < path.size() - 1; i++) {
         Vec2D neighbour = path[i + 1];
         distance += DISTANCE(neighbour.x - previous.x, neighbour.y - previous.y);
